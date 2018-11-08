@@ -1,10 +1,10 @@
 package artifactory
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"net/http"
-	"crypto/tls"
 
 	"github.com/hashicorp/terraform/helper/logging"
 	"github.com/hashicorp/terraform/helper/schema"
