@@ -17,9 +17,10 @@ See details at https://github.com/drewsonne/homebrew-tap/blob/master/terraform-p
 
 ```hcl
 provider "artifactory" {
-  username = "${var.artifactory_username}"
-  password = "${var.artifactory_password}"
-  url      = "${var.artifactory_url}"
+  username        = "${var.artifactory_username}"
+  password        = "${var.artifactory_password}"
+  url             = "${var.artifactory_url}"
+  skip_tls_verify = "${var.artifactory_skip_tls_verify}"
 }
 ```
 
@@ -34,6 +35,9 @@ provider "artifactory" {
   cloud users will have a url similar to `https://youraccountname.jfrog.io/youraccountname`. You can
   also set this via the environment variable. `ARTIFACTORY_URL`
   
+* `skip_tls_verify` - (Optional) Set to true if you want to ignore SSL certificate errors. You can
+  also set this via the environment variable. `ARTIFACTORY_SKIP_TLS_VERIFY`
+
 ## Resources
 
 ### artifactory\_group

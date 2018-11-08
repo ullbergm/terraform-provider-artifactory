@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"crypto/tls"
 
 	"github.com/hashicorp/terraform/helper/logging"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -41,6 +42,13 @@ func Provider() terraform.ResourceProvider {
 				DefaultFunc: schema.EnvDefaultFunc("ARTIFACTORY_URL", nil),
 				Description: "The URL to your Artifactory instance ",
 			},
+
+			"skip_tls_verify": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("ARTIFACTORY_SKIP_VERIFY", ""),
+				Description: "Set this to true only if the target Artifactory server is an insecure development instance.",
+			},
 		},
 		ConfigureFunc: providerConfigure,
 		ResourcesMap: map[string]*schema.Resource{
@@ -57,6 +65,7 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	user := d.Get("username").(string)
 	pass := d.Get("password").(string)
 	url := d.Get("url").(string)
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: d.Get("skip_tls_verify").(bool)}
 	hc := &http.Client{Transport: http.DefaultTransport}
 	hc.Transport = logging.NewTransport("Artifactory", hc.Transport)
 	c := artifactory.NewClient(user, pass, url, hc)
