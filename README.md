@@ -35,8 +35,7 @@ provider "artifactory" {
   cloud users will have a url similar to `https://youraccountname.jfrog.io/youraccountname`. You can
   also set this via the environment variable. `ARTIFACTORY_URL`
   
-* `skip_tls_verify` - (Optional) Set to true if you want to ignore SSL certificate errors. You can
-  also set this via the environment variable. `ARTIFACTORY_SKIP_TLS_VERIFY`
+* `skip_tls_verify` - (Optional) Set to true if you want to ignore SSL certificate errors.
 
 ## Resources
 

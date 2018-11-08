@@ -43,10 +43,10 @@ func Provider() terraform.ResourceProvider {
 				Description: "The URL to your Artifactory instance ",
 			},
 
-			"skip_tls_verify": {
+			"skip_tls_verify": &schema.Schema{
 				Type:        schema.TypeBool,
 				Optional:    true,
-				DefaultFunc: schema.EnvDefaultFunc("ARTIFACTORY_SKIP_VERIFY", ""),
+				Default:     true,
 				Description: "Set this to true only if the target Artifactory server is an insecure development instance.",
 			},
 		},
@@ -65,14 +65,15 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	user := d.Get("username").(string)
 	pass := d.Get("password").(string)
 	url := d.Get("url").(string)
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: d.Get("skip_tls_verify").(bool)}
+	skip_tls := d.Get("skip_tls_verify").(bool)
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: skip_tls}
 	hc := &http.Client{Transport: http.DefaultTransport}
 	hc.Transport = logging.NewTransport("Artifactory", hc.Transport)
 	c := artifactory.NewClient(user, pass, url, hc)
 
 	// fail early. validate the connection to Artifactory
 	if err := c.Ping(); err != nil {
-		return nil, fmt.Errorf("Error connecting to Artifactory: %s", err)
+		return nil, fmt.Errorf("Error connecting to Artifactory: %s, %s", err, skip_tls)
 	}
 
 	return c, nil
