@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.9
-    working_directory: /go/src/github.com/webdevwilson/terraform-provider-artifactory
+    working_directory: /go/src/github.com/ullbergm/terraform-provider-artifactory
     steps:
       - checkout
       - run: make test build
