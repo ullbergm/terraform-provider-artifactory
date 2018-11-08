@@ -10,3 +10,5 @@ jobs:
     steps:
       - checkout
       - run: make test build
+      - store_artifacts:
+          path: /go/bin/terraform-provider-artifactory
